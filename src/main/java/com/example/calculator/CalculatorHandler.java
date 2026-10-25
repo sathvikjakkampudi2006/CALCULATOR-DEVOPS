@@ -20,6 +20,11 @@ public class CalculatorHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
 
         try {
+            
+            if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+                sendResponse(exchange, 405, "{\"error\":\"Only GET requests are allowed\"}");
+                return;
+            }
 
             String path = exchange.getRequestURI().getPath();
 
