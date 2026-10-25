@@ -71,4 +71,23 @@ class CalculatorIntegrationTest {
 
         assertTrue(response.body().contains("\"status\":\"UP\""));
     }
+    @Test
+    void testPostMethodNotAllowed() throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(baseUrl + "/api/v1/add?a=2&b=3"))
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
+    
+        HttpResponse<String> response =
+                client.send(
+                        request,
+                        HttpResponse.BodyHandlers.ofString()
+                );
+    
+        assertEquals(405, response.statusCode());
+    
+        assertTrue(
+                response.body().contains("Only GET requests are allowed")
+        );
+    }
 }
