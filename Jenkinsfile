@@ -72,10 +72,11 @@ pipeline {
                 sh '''
                     echo "Waiting for calculator service..."
 
-                    for i in {1..30}; do
+                    for i in $(seq 1 30); do
                         if curl -fsS http://localhost:8082/actuator/health; then
                             echo ""
                             echo "Calculator service is healthy."
+                            docker compose -f docker-compose.yml ps
                             exit 0
                         fi
 
@@ -92,8 +93,39 @@ pipeline {
     }
 
     post {
+
         always {
             junit 'target/surefire-reports/*.xml'
         }
+
+        success {
+            mail to: 'sathvikjakkampudi2006@gmail.com',
+                 subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: """Build ${env.BUILD_NUMBER} completed successfully.
+
+Job: ${env.JOB_NAME}
+Build: #${env.BUILD_NUMBER}
+Status: SUCCESS
+
+Jenkins build URL:
+${env.BUILD_URL}
+"""
+        }
+
+        failure {
+            mail to: 'sathvikjakkampudi2006@gmail.com',
+                 subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: """Build ${env.BUILD_NUMBER} failed.
+
+Job: ${env.JOB_NAME}
+Build: #${env.BUILD_NUMBER}
+Status: FAILURE
+
+Check the Jenkins console output:
+${env.BUILD_URL}
+"""
+        }
     }
 }
+
+
