@@ -20,35 +20,26 @@ public class CalculatorHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
 
         try {
-            
-            if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-                sendResponse(exchange, 405, "{\"error\":\"Only GET requests are allowed\"}");
-                return;
-            }
-
-            String path = exchange.getRequestURI().getPath();
 
             // Only GET requests are allowed.
             if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
-
                 sendResponse(
                         exchange,
                         405,
                         "{\"error\":\"Only GET requests are allowed\"}"
                 );
-
                 return;
             }
 
+            String path = exchange.getRequestURI().getPath();
+
             // Health endpoint does not need parameters.
             if (path.equals("/actuator/health")) {
-
                 sendResponse(
                         exchange,
                         200,
                         "{\"status\":\"UP\"}"
                 );
-
                 return;
             }
 
@@ -74,13 +65,11 @@ public class CalculatorHandler implements HttpHandler {
                     break;
 
                 default:
-
                     sendResponse(
                             exchange,
                             404,
                             "{\"error\":\"Endpoint not found\"}"
                     );
-
                     return;
             }
 
@@ -97,7 +86,6 @@ public class CalculatorHandler implements HttpHandler {
                         400,
                         "{\"error\":\"Parameters 'a' and 'b' are required\"}"
                 );
-
                 return;
             }
 
@@ -106,7 +94,6 @@ public class CalculatorHandler implements HttpHandler {
 
             // Convert parameters to numbers.
             try {
-
                 a = Double.parseDouble(parameters.get("a"));
                 b = Double.parseDouble(parameters.get("b"));
 
@@ -117,7 +104,6 @@ public class CalculatorHandler implements HttpHandler {
                         400,
                         "{\"error\":\"Parameters 'a' and 'b' must be numeric\"}"
                 );
-
                 return;
             }
 
@@ -129,7 +115,6 @@ public class CalculatorHandler implements HttpHandler {
                         400,
                         "{\"error\":\"Parameters 'a' and 'b' must be finite numbers\"}"
                 );
-
                 return;
             }
 
