@@ -24,4 +24,5 @@ public class Calculator {
 
         return a / b;
     }
+    //calculator operations for the REST API
 }
